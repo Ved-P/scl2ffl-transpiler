@@ -122,9 +122,10 @@ def compile(node):
             res_expr = ""
             eq_array = []
 
-            if (node.op == SclOperator.ADD):
+            # Addition, Multiplication, and Subtraction.
+            if (node.op.arity() == 2 and node.op != SclOperator.DIV):
                 
-                # Compile the expression to be added.
+                # Compile the expressions to be operated on.
                 in0_expr, in0_arr = compile(node.exprs[0])
                 in1_expr, in1_arr = compile(node.exprs[1])
 
@@ -136,7 +137,7 @@ def compile(node):
                 res_expr = fresh_var("_expr")
                 eq_array += [FflEquation(res_expr, FflExpr(FflOperator.VAR, []))]
 
-                # Add the operation equaition.
+                # Add the operation equation.
                 eq_array += [FflEquation(
                     res_expr,
                     FflExpr(
