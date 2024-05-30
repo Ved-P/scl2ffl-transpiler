@@ -88,19 +88,13 @@ def compile(node):
         case SclAssign():
 
             # Compile the expression to be set equal to.
-            expr_scl, eq_array = compile(node.expr);
+            expr_scl, eq_array = compile(node.expr)
 
-            # Check if the var has been created yet.
-            hasVarBeenMade = True
-            global sind
-            if node.sym not in sind.keys():
-                hasVarBeenMade = False;
-
+            # Create a fresh var.
             var_name = fresh_var(node.sym)
 
-            # If the var has not been made, make it.
-            if not hasVarBeenMade:
-                eq_array += [FflEquation(var_name, FflExpr(FflOperator.VAR, []))]
+            # Assign it to var().
+            eq_array += [FflEquation(var_name, FflExpr(FflOperator.VAR, []))]
 
             # Add an equation assigning sym = expr, using a new version var.
             eq_array += [FflEquation(var_name, expr_scl)]
@@ -123,10 +117,35 @@ def compile(node):
             return None, total_eq_array
 
         case SclExpr():
-            # ============================
-            # add your implementation here
-            # ============================
-            return None, []
+
+            # Return values.
+            res_expr = ""
+            eq_array = []
+
+            if (node.op == SclOperator.ADD):
+                
+                # Compile the expression to be added.
+                in0_expr, in0_arr = compile(node.exprs[0])
+                in1_expr, in1_arr = compile(node.exprs[1])
+
+                # Store the previous equations.
+                eq_array += in0_arr
+                eq_array += in1_arr
+
+                # Create a new expr var.
+                res_expr = fresh_var("_expr")
+                eq_array += [FflEquation(res_expr, FflExpr(FflOperator.VAR, []))]
+
+                # Add the operation equaition.
+                eq_array += [FflEquation(
+                    res_expr,
+                    FflExpr(
+                        sclop2fflop(node.op),
+                        [in0_expr, in1_expr]
+                    )
+                )]
+
+            return res_expr, eq_array
 
         # only when reading; for writing/creation use fresh_* directly
         case obj if isinstance(obj, str):
