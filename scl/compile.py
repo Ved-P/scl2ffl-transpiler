@@ -169,6 +169,76 @@ def compile(node):
                     )
                 )]
 
+            # If zero branch.
+            else:
+
+                # Compile the expressions to be operated on.
+                control_expr, control_arr = compile(node.exprs[0])
+                in0_expr, in0_arr = compile(node.exprs[1])
+                in1_expr, in1_arr = compile(node.exprs[2])
+
+                # Store the previous equations.
+                eq_array += control_arr
+                eq_array += in0_arr
+                eq_array += in1_arr
+
+                # Create a new inv var and a new expr var.
+                inv_var = fresh_var("_inv")
+                eq_array += [FflEquation(inv_var, FflExpr(FflOperator.VAR, []))]
+                expr_var = fresh_var("_expr")
+                eq_array += [FflEquation(expr_var, FflExpr(FflOperator.VAR, []))]
+
+                # Create the following equation:
+                # control * inv = 1 - expr
+                eq_array += [FflEquation(
+                    FflExpr(
+                        FflOperator.MUL,
+                        [control_expr, inv_var]
+                    ),
+                    FflExpr(
+                        FflOperator.SUB,
+                        [1, expr_var]
+                    )
+                )]
+
+                # Create the following equation:
+                # control * expr = 0
+                eq_array += [FflEquation(
+                    FflExpr(
+                        FflOperator.MUL,
+                        [control_expr, expr_var]
+                    ),
+                    0
+                )]
+
+                # Create the result var.
+                res_expr = fresh_var("_expr")
+                eq_array += [FflEquation(res_expr, FflExpr(FflOperator.VAR, []))]
+
+                # Create the following equation:
+                # result = expr * option0 + (1 - expr) * option1
+                eq_array += [FflEquation(
+                    res_expr,
+                    FflExpr(
+                        FflOperator.ADD,
+                        [
+                            FflExpr(
+                                FflOperator.MUL,
+                                [expr_var, in0_expr]
+                            ),
+                            FflExpr(
+                                FflOperator.MUL,
+                                [
+                                    FflExpr(
+                                        FflOperator.SUB,
+                                        [1, expr_var]
+                                    ), in1_expr
+                                ]
+                            )
+                        ]
+                    )
+                )]
+
             return res_expr, eq_array
 
         # only when reading; for writing/creation use fresh_* directly
