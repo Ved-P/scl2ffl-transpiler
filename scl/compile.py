@@ -146,6 +146,29 @@ def compile(node):
                     )
                 )]
 
+            elif (node.op == SclOperator.DIV):
+
+                # Compile the expressions to be operated on.
+                in0_expr, in0_arr = compile(node.exprs[0])
+                in1_expr, in1_arr = compile(node.exprs[1])
+
+                # Store the previous equations.
+                eq_array += in0_arr
+                eq_array += in1_arr
+
+                # Create a new expr var.
+                res_expr = fresh_var("_expr")
+                eq_array += [FflEquation(res_expr, FflExpr(FflOperator.VAR, []))]
+
+                # Add the operation equation but reformat to multiplication.
+                eq_array += [FflEquation(
+                    in0_expr,
+                    FflExpr(
+                        FflOperator.MUL,
+                        [res_expr, in1_expr]
+                    )
+                )]
+
             return res_expr, eq_array
 
         # only when reading; for writing/creation use fresh_* directly
