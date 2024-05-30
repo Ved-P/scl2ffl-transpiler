@@ -92,10 +92,19 @@ def compile(node):
             return None, []
 
         case SclEq():
-            # ============================
-            # add your implementation here
-            # ============================
-            return None, []
+
+            # Compile the left and right nodes.
+            lhs_scl, lhs_eq_array = compile(node.lhs);
+            rhs_scl, rhs_eq_array = compile(node.rhs);
+
+            # Combine the equation array.
+            total_eq_array = lhs_eq_array;
+            total_eq_array += rhs_eq_array;
+
+            # Add an equation setting lhs = rhs.
+            total_eq_array += [FflEquation(lhs_scl, rhs_scl)];
+
+            return None, total_eq_array;
 
         case SclExpr():
             # ============================
