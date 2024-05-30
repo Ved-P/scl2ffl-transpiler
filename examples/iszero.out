@@ -1,0 +1,9 @@
+in = signal()
+out = signal()
+_inv$0 = var()
+_expr$0 = var()
+in * _inv$0 = 1 - _expr$0
+in * _expr$0 = 0
+_expr$1 = var()
+_expr$1 = _expr$0 * 1 + (1 - _expr$0) * 0
+out = _expr$1

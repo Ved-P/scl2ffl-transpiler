@@ -1,0 +1,7 @@
+(circuit
+  (signal l r out)
+  (var tmp1 tmp2)
+  (:= tmp1 (* (+ l r) (/ l r)))
+  (:= tmp2 (+ tmp1 1024))
+  (eq out tmp2)
+)

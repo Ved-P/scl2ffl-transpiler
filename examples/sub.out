@@ -1,0 +1,6 @@
+l = signal()
+r = signal()
+out = signal()
+_expr$0 = var()
+_expr$0 = l - r
+out = _expr$0

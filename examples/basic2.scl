@@ -1,0 +1,7 @@
+(circuit
+  (signal first second v1 v2 output)
+  (var a b)
+  (:= a (ite first v1 0))
+  (:= b (ite second v2 0))
+  (eq output (+ a b))
+)

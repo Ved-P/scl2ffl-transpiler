@@ -1,0 +1,4 @@
+(circuit
+  (signal l r out) 
+  (eq out (+ l r))
+)

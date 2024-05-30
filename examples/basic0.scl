@@ -1,0 +1,6 @@
+(circuit
+  (signal l r out)
+  (var tmp)
+  (:= tmp (* (+ l r) (- l r)))
+  (eq out tmp)
+)

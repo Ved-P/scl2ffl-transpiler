@@ -1,0 +1,4 @@
+(circuit
+  (signal in out)
+  (eq out (ite in 1 0))
+)

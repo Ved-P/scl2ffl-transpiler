@@ -1,0 +1,16 @@
+l = signal()
+r = signal()
+out = signal()
+_expr$0 = var()
+_expr$0 = l + r
+_expr$1 = var()
+l = _expr$1 * r
+_expr$2 = var()
+_expr$2 = _expr$0 * _expr$1
+tmp1$0 = var()
+tmp1$0 = _expr$2
+_expr$3 = var()
+_expr$3 = tmp1$0 + 1024
+tmp2$0 = var()
+tmp2$0 = _expr$3
+out = tmp2$0
